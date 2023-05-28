@@ -2,35 +2,31 @@ import "./App.css";
 import { FetchWeatherData } from "./weatherApi";
 import { useEffect, useState } from "react";
 import { TopBar } from "./components/TopBar";
-//http://api.openweathermap.org/data/2.5/weather?q=London&appid=YOURKEY
 
 function App() {
-  const [weatherState, setWeatherState] = useState(null);
+  const [rootDataState, setRootDataState] = useState(null);
   const [weatherBgState, setWeatherBgState] = useState("");
-  const [weatherIcoState, setWeatherIcoState] = useState("");
+  const [weatherDataState, setWeatherDataState] = useState(null);
+  const [mainDataState, setMainDataState] = useState(null);
 
   useEffect(() => {
     (async () => {
       const data = await FetchWeatherData();
       if (data) {
-        setWeatherState(data);
+        setRootDataState(data);
         console.log(data);
       }
     })();
   }, []);
 
   useEffect(() => {
-    if (
-      weatherState?.weather &&
-      weatherState.weather.length > 0 &&
-      weatherState.weather[0].main === "Clouds"
-    ) {
-      console.log("Weather is cloudy.");
+    if (rootDataState?.weather && rootDataState.weather.length > 0) {
+      console.log("Weather is not null, updating weather state data.");
       setWeatherBgState("cloudy-cropped.png");
-      setWeatherIcoState("Clouds");
-      console.log("Weather icon set to: " + weatherIcoState);
+      setWeatherDataState(rootDataState.weather[0]);
+      setMainDataState(rootDataState.main);
     }
-  }, [weatherState]);
+  }, [rootDataState]);
 
   return (
     <div className="App">
@@ -39,16 +35,16 @@ function App() {
         style={{ backgroundImage: `url(${weatherBgState})` }}
       >
         <TopBar
-          onFetchData={async () => {
-            const data = await FetchWeatherData();
+          onFetchData={async (locationString) => {
+            const data = await FetchWeatherData(locationString);
             if (data) {
-              setWeatherState(data);
+              setRootDataState(data);
               console.log(data);
             }
           }}
-          weatherIcon={weatherIcoState}
+          weatherData={weatherDataState}
         />
-        <WeatherBar />
+        <WeatherBar rootData={rootDataState} mainData={mainDataState} />
         <FutureWeatherBar />
       </div>
     </div>
@@ -56,10 +52,17 @@ function App() {
 }
 
 function WeatherBar(props) {
+  let celsius = props.mainData?.temp - 273.15;
+  let farenheit = celsius * 1.8 + 32;
   return (
     <div className="currentWeatherBar">
-      <div className="currentLocation">London</div>
-      <div>72°</div>
+      <div className="currentLocation">{props.rootData?.name}</div>
+      <div>
+        {celsius.toFixed(1).toString() +
+          "°C | " +
+          farenheit.toFixed(1).toString() +
+          "°F"}
+      </div>
     </div>
   );
 }

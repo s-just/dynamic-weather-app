@@ -1,9 +1,15 @@
 import Axios from "axios";
 
-export async function FetchWeatherData() {
+//https://api.openweathermap.org/data/2.5/forecast?q=London&appid=YOURKEY
+
+export async function FetchWeatherData(locationString = "") {
+  if (locationString === "") {
+    console.log("No input string, using London as default.");
+    locationString = "London";
+  }
   try {
     const res = await Axios.get(
-      "http://api.openweathermap.org/data/2.5/weather?q=London&appid=YOURKEY"
+      `http://api.openweathermap.org/data/2.5/weather?q=${locationString}&appid=YOURKEY`
     );
     const weatherData = res.data;
     return weatherData;

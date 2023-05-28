@@ -16,7 +16,7 @@
   transform: translate(-50%, -50%);
   overflow: hidden;
   background-color: dodgerblue;
-  background-image: "";
+  background-image: "nodata-cropped.png";
 }
 
 .topBar {
@@ -38,6 +38,8 @@
   gap: 8px; 
   margin-top: 10px;
   margin-right: 10px;
+  background-color:rgb(143, 143, 130);
+  border-radius: 25px;
 }
 
 .currentWeatherIcoDetailed {
@@ -52,13 +54,16 @@
   font-size: 40pt;
   margin-top: 50px;
   margin-bottom: 50px;
+  color: white;
 }
 
 .currentLocation {
   font-size: 36pt;
+  color: white;
 }
 
 .futureWeatherBar{
+  color: white;
   margin-top: 50px;
   display: flex;
   flex-direction: row;

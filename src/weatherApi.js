@@ -4,7 +4,7 @@ import Axios from "axios";
 
 export async function FetchWeatherData(locationString = "") {
   if (locationString === "") {
-    console.log("No input string, using London as default.");
+    console.log("No input string, using London as default for weather.");
     locationString = "London";
   }
   try {
@@ -15,14 +15,23 @@ export async function FetchWeatherData(locationString = "") {
     return weatherData;
   } catch (error) {
     console.error("Error fetching weather data: ", error);
+    return null;
+  }
+}
 
-    if (error.response && error.response.status === 401) {
-      console.error(
-        "Authentication error: Please check your API key or login credentials."
-      );
-    }
-
-    // TODO: Handle other errors.
-    //throw error;
+export async function FetchForecastData(locationString = "") {
+  if (locationString === "") {
+    console.log("No input string, using London as default for forecast.");
+    locationString = "London";
+  }
+  try {
+    const res = await Axios.get(
+      `https://api.openweathermap.org/data/2.5/forecast?q=${locationString}&appid=YOURKEY`
+    );
+    const forecastData = res.data;
+    return forecastData;
+  } catch (error) {
+    console.error("Error fetching forecast data: ", error);
+    return null;
   }
 }

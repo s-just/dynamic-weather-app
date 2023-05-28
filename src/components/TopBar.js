@@ -1,4 +1,17 @@
 import { useState } from "react";
+function GetWeatherIco(weatherData) {
+  // If weatherData or weatherData.icon does not exist, use a default placeholder icon.
+  let iconSrc =
+    weatherData && weatherData.icon
+      ? "https://openweathermap.org/img/wn/" + weatherData.icon + ".png"
+      : "http://openweathermap.org/img/wn/50d@2x.png";
+
+  return (
+    <div className="currentWeatherIco">
+      <img src={iconSrc} width="50" height="50"></img>
+    </div>
+  );
+}
 
 export function TopBar(props) {
   const [inputValue, setInputValue] = useState("");
@@ -17,19 +30,7 @@ export function TopBar(props) {
         />{" "}
         <button onClick={() => props.onFetchData(inputValue)}> {">"} </button>
       </div>
-      {props.weatherData && GetWeatherIco(props.weatherData)}
-    </div>
-  );
-}
-
-//https://cdn-icons-png.flaticon.com/512/1163/1163661.png
-
-function GetWeatherIco(weatherData) {
-  let iconSrc =
-    "https://openweathermap.org/img/wn/" + weatherData?.icon + ".png";
-  return (
-    <div className="currentWeatherIco">
-      <img src={iconSrc} width="50" height="50"></img>
+      {GetWeatherIco(props.weatherData)}
     </div>
   );
 }

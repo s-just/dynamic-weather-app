@@ -1,37 +1,45 @@
 import Axios from "axios";
 
-//https://api.openweathermap.org/data/2.5/forecast?q=London&appid=YOURKEY
-
-export async function FetchWeatherData(locationString = "") {
-  if (locationString === "") {
-    console.log("No input string, using London as default for weather.");
-    locationString = "London";
-  }
+// Fetch current weather data from OpenWeatherMap
+export const FetchWeatherData = async (locationString = "London") => {
   try {
-    const res = await Axios.get(
-      `http://api.openweathermap.org/data/2.5/weather?q=${locationString}&appid=YOURKEY`
+    const isCoordinates = /^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/.test(
+      locationString
     );
-    const weatherData = res.data;
-    return weatherData;
+    const url = isCoordinates
+      ? `https://api.openweathermap.org/data/2.5/weather?lat=${
+          locationString.split(",")[0]
+        }&lon=${locationString.split(",")[1]}&appid=${
+          process.env.REACT_APP_WEATHER_API_KEY
+        }`
+      : `https://api.openweathermap.org/data/2.5/weather?q=${locationString}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`;
+
+    const res = await Axios.get(url);
+    return res.data;
   } catch (error) {
     console.error("Error fetching weather data: ", error);
     return null;
   }
-}
+};
 
-export async function FetchForecastData(locationString = "") {
-  if (locationString === "") {
-    console.log("No input string, using London as default for forecast.");
-    locationString = "London";
-  }
+// Fetch forecast weather data from OpenWeatherMap
+export const FetchForecastData = async (locationString = "London") => {
   try {
-    const res = await Axios.get(
-      `https://api.openweathermap.org/data/2.5/forecast?q=${locationString}&appid=YOURKEY`
+    const isCoordinates = /^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/.test(
+      locationString
     );
-    const forecastData = res.data;
-    return forecastData;
+    const url = isCoordinates
+      ? `https://api.openweathermap.org/data/2.5/forecast?lat=${
+          locationString.split(",")[0]
+        }&lon=${locationString.split(",")[1]}&appid=${
+          process.env.REACT_APP_WEATHER_API_KEY
+        }`
+      : `https://api.openweathermap.org/data/2.5/forecast?q=${locationString}&appid=${process.env.REACT_APP_WEATHER_API_KEY}`;
+
+    const res = await Axios.get(url);
+    return res.data;
   } catch (error) {
     console.error("Error fetching forecast data: ", error);
     return null;
   }
-}
+};
